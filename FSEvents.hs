@@ -10,9 +10,10 @@ import Control.Monad (forM)
 data CWatcher
 type CWatcherRef = Ptr CWatcher
 
+type PathEvent = CString -> IO ()
+
 data Watcher = Watcher CWatcherRef (FunPtr PathEvent)
 
-type PathEvent = CString -> IO ()
 foreign import ccall "wrapper"
   mkPathEvent :: PathEvent -> IO (FunPtr PathEvent)
 

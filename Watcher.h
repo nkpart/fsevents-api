@@ -6,6 +6,7 @@ typedef void (*PathCallback)(char *);
 @interface Watcher : NSThread {
   NSArray *pathsToWatch;
   PathCallback callback;
+  FSEventStreamRef stream;
 }
 
 - (id)initWithPaths:(NSArray *)ps callback:(PathCallback)cb;
