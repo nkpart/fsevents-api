@@ -1,7 +1,7 @@
 #import <CoreServices/CoreServices.h>
 #import <Foundation/Foundation.h>
 
-@interface Watcher : NSObject {
+@interface Watcher : NSThread {
   NSArray *pathsToWatch;
 }
 
@@ -9,4 +9,4 @@
 - (void)eventOccurredOnPath:(char *)path;
 @end
 
-void WatcherCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, size_t numEvents, void *eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]); 
+Watcher *WatcherCreate(char *paths[], int numPaths);
