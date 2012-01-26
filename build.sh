@@ -1,1 +1,1 @@
-gcc simple_fs_events.m -framework Foundation -framework CoreServices -framework CoreFoundation
+ghc --make main.m Watcher.m -framework Foundation -framework CoreServices
