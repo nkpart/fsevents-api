@@ -7,28 +7,36 @@ import Foreign.Marshal.Alloc (free)
 import Foreign.Marshal.Array
 import Control.Monad (forM)
 
-data Watcher
-type WatcherRef = Ptr Watcher
+data CWatcher
+type CWatcherRef = Ptr CWatcher
+
+data Watcher = Watcher CWatcherRef (FunPtr PathEvent)
+
+type PathEvent = CString -> IO ()
+foreign import ccall "wrapper"
+  mkPathEvent :: PathEvent -> IO (FunPtr PathEvent)
 
 foreign import ccall unsafe 
     "Watcher.h WatcherCreate" 
-    c_WatcherCreate :: Ptr (Ptr CChar) -> CInt -> IO WatcherRef
+    c_WatcherCreate :: Ptr CString -> CInt -> FunPtr (CString -> IO ()) -> IO CWatcherRef
 
 foreign import ccall unsafe 
     "Watcher.h WatcherRelease" 
-    c_WatcherRelease :: WatcherRef -> IO ()
+    c_WatcherRelease :: CWatcherRef -> IO ()
 
-watchPaths :: [String] -> IO WatcherRef
-watchPaths paths = do
-  print 1
+startWatcher :: [String] -> (String -> IO ()) -> IO Watcher
+startWatcher paths f = do
   cStrs <- mapM newCString paths  
-  print 2
-  watcher <- withArrayLen cStrs $ \count pp -> c_WatcherCreate pp (fromIntegral count)
-  print 3
+  callback <- mkPathEvent $ \c -> do
+    path <- peekCString c
+    f path
+  watcher <- withArrayLen cStrs $ \count pp -> do
+    c_WatcherCreate pp (fromIntegral count) callback
   mapM_ free cStrs
-  print 4
-  return watcher
+  return $ Watcher watcher callback
 
-stopWatcher :: WatcherRef -> IO ()
-stopWatcher = c_WatcherRelease
+stopWatcher :: Watcher -> IO ()
+stopWatcher (Watcher ref fp) = do
+  c_WatcherRelease ref
+  freeHaskellFunPtr fp
 

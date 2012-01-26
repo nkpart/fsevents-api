@@ -1,3 +1,5 @@
 a.out
 *.hi
 *.o
+*_stub.c
+*_stub.h

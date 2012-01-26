@@ -9,7 +9,7 @@ void WatcherCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, 
   }
 }
 
-Watcher *WatcherCreate(char *paths[], int numPaths) {
+Watcher *WatcherCreate(char *paths[], int numPaths, PathCallback callback) {
   int i;
   NSLog(@"Starting. %d", numPaths);
   NSMutableArray *paths_ = [[NSMutableArray alloc] initWithCapacity:numPaths];
@@ -18,7 +18,7 @@ Watcher *WatcherCreate(char *paths[], int numPaths) {
     [paths_ addObject:s];
     [s release];
   }
-  Watcher *watcher = [[Watcher alloc] initWithPaths:paths_];
+  Watcher *watcher = [[Watcher alloc] initWithPaths:paths_ callback:callback];
   [paths_ release];
   [watcher start];
   return watcher;
@@ -31,8 +31,9 @@ void WatcherRelease(Watcher *w) {
 
 @implementation Watcher
 
-- (id)initWithPaths:(NSArray *)ps {
+- (id)initWithPaths:(NSArray *)ps callback:(PathCallback)cb {
   if ((self = [super init])) {
+    callback = cb;
     pathsToWatch = [ps retain];
   }
   return self;
@@ -42,8 +43,10 @@ void WatcherRelease(Watcher *w) {
   [pathsToWatch release];
   [super dealloc];
 }
+
 - (void)eventOccurredOnPath:(char *)path {
     NSLog(@"%s", path);
+    callback(path);
 }
 
 - (void)main {
