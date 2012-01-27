@@ -10,7 +10,6 @@ typedef void (*PathCallback)(char *);
 }
 
 - (id)initWithPaths:(NSArray *)ps callback:(PathCallback)cb;
-- (void)eventOccurredOnPath:(char *)path;
 @end
 
 Watcher *WatcherCreate(char *paths[], int numPaths, PathCallback callback);

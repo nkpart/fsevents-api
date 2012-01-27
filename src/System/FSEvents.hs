@@ -1,3 +1,4 @@
+{-# LANGUAGE ForeignFunctionInterface, EmptyDataDecls #-}
 module System.FSEvents (
     EventStream,
     startEventStream,
