@@ -11,7 +11,6 @@ void WatcherCallback(ConstFSEventStreamRef streamRef, void *clientCallBackInfo, 
 
 Watcher *WatcherCreate(char *paths[], int numPaths, PathCallback callback) {
   int i;
-  NSLog(@"Starting. %d", numPaths);
   NSMutableArray *paths_ = [[NSMutableArray alloc] initWithCapacity:numPaths];
   for (i = 0; i < numPaths; i++) {
     NSString *s = [[NSString alloc] initWithCString:paths[i] encoding:[NSString defaultCStringEncoding]];

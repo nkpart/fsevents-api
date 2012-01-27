@@ -1,10 +1,11 @@
 module Main where
 
-import FSEvents
+import System.FSEvents
 import Control.Concurrent
 
 main = do
-  startWatcher ["/"] $ \p -> do
+  ref <- startEventStream ["/"] $ \p -> do
     putStrLn $ "OMG WE GOT SOMETHING"
     putStrLn p
   threadDelay 15000000
+  stopEventStream ref
