@@ -10,7 +10,7 @@ Copyright:           2012, Nick Partridge
 Category:            System
 Build-type:          Simple
 Extra-source-files:  objc, examples
-Cabal-version:       >=1.2
+Cabal-version:       >=1.8
 
 Library
   Exposed-modules:     System.FSEvents
@@ -19,5 +19,10 @@ Library
     Buildable: False
 
   hs-source-dirs: src
+  frameworks: CoreServices Foundation
   C-sources: objc/Watcher.m
   Include-dirs: objc
+
+Executable fsevents-test
+  build-depends: fs-events, base
+  main-is: examples/Main.hs

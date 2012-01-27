@@ -34,7 +34,7 @@ void WatcherRelease(Watcher *w) {
   if ((self = [super init])) {
     callback = cb;
     pathsToWatch = [ps retain];
-    FSEventStreamContext context;
+    FSEventStreamContext context = {};
     context.info = cb;
     stream = FSEventStreamCreate(NULL, &WatcherCallback, &context, (CFArrayRef) ps, kFSEventStreamEventIdSinceNow, 2, 0);
   }
