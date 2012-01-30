@@ -1,4 +1,13 @@
 {-# LANGUAGE ForeignFunctionInterface, EmptyDataDecls #-}
+
+--------------------------------------------------------------------------------
+-- |
+-- A Haskell wrapper to the FSEvents API. 
+-- <http://developer.apple.com/library/mac/#documentation/Darwin/Conceptual/FSEvents_ProgGuide/Introduction/Introduction.html>
+--
+-- Use 'startEventStream' to start watching directories, and 'stopEventStream'
+-- to shut it down.
+--------------------------------------------------------------------------------
 module System.FSEvents (
     EventStream,
     startEventStream,
@@ -28,6 +37,7 @@ foreign import ccall unsafe
     "Watcher.h WatcherRelease" 
     c_WatcherRelease :: CEventStreamRef -> IO ()
 
+-- 
 startEventStream :: [FilePath] -> (FilePath -> IO ()) -> IO EventStream
 startEventStream paths f = do
   cStrs <- mapM newCString paths  
