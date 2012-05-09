@@ -9,19 +9,17 @@ Maintainer:          nkpart@gmail.com
 Copyright:           2012, Nick Partridge
 Category:            System
 Build-type:          Simple
-Extra-source-files:  objc, examples
+Extra-source-files:  Watcher.c, Watcher.h, examples
 Cabal-version:       >=1.8
 
 Library
   Exposed-modules:     System.FSEvents
   Build-depends:       base >= 4
-  if !impl(GHC >= 7.2.1)
-    Buildable: False
-
   hs-source-dirs: src
-  frameworks: CoreServices Foundation
-  C-sources: objc/Watcher.m
-  Include-dirs: objc
+  frameworks: CoreServices
+  C-sources: Watcher.c
+  CC-options: -msse2
+  Include-dirs: .
 
 Executable fsevents-test
   build-depends: fs-events, base
