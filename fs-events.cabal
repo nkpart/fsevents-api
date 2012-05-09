@@ -21,6 +21,3 @@ Library
   CC-options: -msse2
   Include-dirs: .
 
-Executable fsevents-test
-  build-depends: fs-events, base
-  main-is: examples/Main.hs
