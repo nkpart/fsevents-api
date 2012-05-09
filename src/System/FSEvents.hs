@@ -37,13 +37,11 @@ foreign import ccall unsafe
     "Watcher.h WatcherRelease" 
     c_WatcherRelease :: CEventStreamRef -> IO ()
 
--- 
 startEventStream :: [FilePath] -> (FilePath -> IO ()) -> IO EventStream
 startEventStream paths f = do
   cStrs <- mapM newCString paths  
   callback <- mkPathEvent $ \c -> peekCString c >>= f
-  watcher <- withArrayLen cStrs $ \count pp -> do
-    c_WatcherCreate pp (fromIntegral count) callback
+  watcher <- withArrayLen cStrs $ \count pp -> c_WatcherCreate pp (fromIntegral count) callback
   mapM_ free cStrs
   return $ EventStream watcher callback
 
